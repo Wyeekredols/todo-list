@@ -22,7 +22,7 @@ addTask.addEventListener('click', function () {
   const deleteTask = document.querySelectorAll('.delete-item');
   for (let i = 0; i < deleteTask.length; i++) {
     deleteTask[i].addEventListener('click', function () {
-      this.parentNode.parentNode.remove();
+      this.parentNode.remove();
     });
   }
 
