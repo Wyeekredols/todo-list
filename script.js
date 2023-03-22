@@ -3,33 +3,53 @@
 const todoItemInput = document.querySelector('.item-detail');
 const addTask = document.querySelector('.add-item');
 const saveTask = document.querySelectorAll('.save-item');
+const listContainer = document.querySelector('.displayTodoList');
 
-addTask.addEventListener('click', function () {
-  const task = todoItemInput.value;
-  const todoItems = [task];
+function generateListItem(value) {
+  return `<li id="_${value}">
+  <p class="form-input listItem">${value} </p>
+  <input style="display: none" type="text" class="form-input listItem">
+  <button class="btn btn-theme edit-item">EDIT</button>
+  <button class="btn btn-danger delete-item">X</button>
+  </li>`;
+}
 
-  for (let i = 0; i < todoItems.length; i++) {
-    console.log(todoItems[i]);
-    let displayList = `<li> 
-      <input type="text" class="form-input listItem" value="${todoItems[i]}"> 
-      <button class="btn btn-theme edit-item">EDIT</button>
-      <button class="btn btn-danger delete-item">X</button>
-    </li>`;
-    document.querySelector('.displayTodoList').innerHTML += displayList;
-    todoItemInput.value = '';
+addTask.addEventListener('click', (e) => {
+  let inputValue = todoItemInput.value;
+  console.log(inputValue);
+  if (inputValue.trim() === "") return;
+  let new_task = generateListItem(inputValue);
+  listContainer.insertAdjacentHTML('beforeend', new_task);
+  todoItemInput.value = "";
+})
+
+document.body.addEventListener('click', e => {
+  if (e.target.classList.contains('delete-item')) {
+    e.target.parentElement.parentElement.removeChild(e.target.parentElement);
   }
 
-  const deleteTask = document.querySelectorAll('.delete-item');
-  for (let i = 0; i < deleteTask.length; i++) {
-    deleteTask[i].addEventListener('click', function () {
-      this.parentNode.remove();
-    });
-  }
+  if (e.target.classList.contains('edit-item')) {
+    let input = e.target.parentElement.querySelector('input');
+    let p = e.target.parentElement.querySelector('p');
 
-  const editTask = document.querySelectorAll('.edit-item');
-  for (let i = 0; i < editTask.length; i++) {
-    editTask[i].addEventListener('click', function () {
-      const updateTodo = document.querySelector('.listItem').value;
-    });
+    // console.log(p, input);
+    if (e.target.textContent === 'EDIT') {
+      // console.log(p, input);
+      input.value = p.textContent
+
+      p.style.display = "none"
+      input.style.display = "block"
+
+      e.target.textContent = 'SAVE';
+    } else if (e.target.textContent === 'SAVE') {
+      let input = e.target.parentElement.querySelector('input');
+      let p = e.target.parentElement.querySelector('p');
+      p.textContent = input.value;
+
+      input.style.display = "none"
+      p.style.display = "block"
+
+      e.target.textContent = 'EDIT';
+    }
   }
 });
